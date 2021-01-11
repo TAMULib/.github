@@ -18,12 +18,11 @@ runs:
 
   steps:
 
-  # Run Tests.
-  - name: Running Tests for Java
-    env:
-      COVERALLS_BUILD_NUMBER: ${{ inputs.coveralls_build_number }}
-      COVERALLS_REPO_TOKEN: ${{ inputs.coveralls_repo_token }}
-      COVERALLS_PARALLEL: ${{ inputs.coveralls_parallel }}
-    run: |
-      mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-      mvn clean test cobertura:cobertura jacoco:report coveralls:report -DserviceName="github-actions" -DserviceBuildNumber="$COVERALLS_BUILD_NUMBER"
+    # Run Tests.
+    - name: Running Tests for Java
+      env:
+        COVERALLS_BUILD_NUMBER: ${{ inputs.coveralls_build_number }}
+        COVERALLS_REPO_TOKEN: ${{ inputs.coveralls_repo_token }}
+        COVERALLS_PARALLEL: ${{ inputs.coveralls_parallel }}
+      run: $GITHUB_ACTION_PATH/script.sh
+      shell: bash
