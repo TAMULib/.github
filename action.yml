@@ -24,25 +24,6 @@ runs:
   using: "composite"
 
   steps:
-  - uses: actions/checkout@v2
-
-
-  # Setup Cache
-  - name: Cache Java Maven Dependencies
-    uses: actions/cache@v2
-    with:
-      path: ~/.m2/repository
-      key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-      restore-keys: |
-        ${{ runner.os }}-maven-
-
-
-  # Setup Java
-  - name: "Setup Java"
-    uses: actions/setup-java@v1
-    with:
-      java-version: ${{ inputs.java_version }}
-
 
   # Run Tests.
   - name: Running Tests for Java
@@ -53,12 +34,3 @@ runs:
     run: |
       mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       mvn clean test cobertura:cobertura jacoco:report coveralls:report -DserviceName="github-actions" -DserviceBuildNumber="$COVERALLS_BUILD_NUMBER"
-
-
-  # Initiate Coveralls
-  - name: Coveralls
-    uses: coverallsapp/github-action@master
-    with:
-      github_token: ${{ inputs.github_token }}
-      flag-name: ${{ inputs.coveralls_build_number }}
-      parallel: ${{ inputs.coveralls_parallel }}
