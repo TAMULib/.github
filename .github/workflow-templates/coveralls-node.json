@@ -1,0 +1,8 @@
+{
+    "name": "TAMULib Coveralls Node Workflow",
+    "description": "Workflow for running tests and submitting them to Coveralls.io.",
+    "iconName": "coveralls-node",
+    "categories": [
+      "node"
+    ]
+}
