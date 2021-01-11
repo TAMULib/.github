@@ -12,13 +12,6 @@ inputs:
     description: 'Set to parallel coveralls build'
     required: false
     default: false
-  github_token:
-    description: 'Github token for the repository'
-    required: true
-  java_version:
-    description: 'Set to Java Version to use'
-    required: false
-    default: 1.8
 
 runs:
   using: "composite"
