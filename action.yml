@@ -1,0 +1,60 @@
+name: 'TAMULib Coveralls for Java'
+description: 'Run Tests and send results to coveralls.'
+
+inputs:
+  coveralls_repo_token:
+    description: 'Coveralls token for the repository'
+    required: true
+  coveralls_build_number:
+    description: 'Build Number or identifier for this coveralls build'
+    required: true
+  coveralls_parallel:
+    description: 'Set to parallel coveralls build'
+    required: false
+    default: false
+  github_token:
+    description: 'Github token for the repository'
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+  - uses: actions/checkout@v2
+
+
+  # Setup Cache
+  - name: Cache Java Maven Dependencies
+    uses: actions/cache@v2
+    with:
+      path: ~/.m2/repository
+      key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      restore-keys: |
+        ${{ runner.os }}-maven-
+
+
+  # Setup Java
+  - name: "Setup Java"
+    uses: actions/setup-java@v1
+    with:
+      java-version: 1.8
+
+
+  # Run Tests.
+  - name: Running Tests for Java
+    env:
+      COVERALLS_BUILD_NUMBER: ${{ inputs.coveralls_build_number }}
+      COVERALLS_REPO_TOKEN: ${{ inputs.coveralls_repo_token }}
+      COVERALLS_PARALLEL: ${{ inputs.coveralls_parallel }}
+    run: |
+      mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      mvn clean test cobertura:cobertura jacoco:report coveralls:report -DserviceName="github-actions" -DserviceBuildNumber="$COVERALLS_BUILD_NUMBER"
+
+
+  # Initiate Coveralls
+  - name: Coveralls
+    uses: coverallsapp/github-action@master
+    with:
+      github_token: ${{ inputs.github_token }}
+      flag-name: ${{ inputs.coveralls_build_number }}
+      parallel: ${{ inputs.coveralls_parallel }}
