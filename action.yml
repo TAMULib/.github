@@ -15,6 +15,10 @@ inputs:
   github_token:
     description: 'Github token for the repository'
     required: true
+  java_version:
+    description: 'Set to Java Version to use'
+    required: false
+    default: 1.8
 
 runs:
   using: "composite"
@@ -37,7 +41,7 @@ runs:
   - name: "Setup Java"
     uses: actions/setup-java@v1
     with:
-      java-version: 1.8
+      java-version: ${{ inputs.java_version }}
 
 
   # Run Tests.
