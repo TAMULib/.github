@@ -1,0 +1,22 @@
+name: 'Combine Coveralls'
+description: 'Combine all provided coveralls.json files into a single coveralls.json.'
+
+inputs:
+  source_paths:
+    description: 'Full paths to all coveralls.json files, space separated and in a bash friendly format.'
+    required: true
+  destination_path:
+    description: 'A path to the combined coveralls.json file.'
+    required: false
+
+runs:
+  using: "composite"
+
+  steps:
+
+    - name: Combining Coveralls JSON
+      env:
+        SOURCE_PATHS: ${{ inputs.source_paths }}
+        DESTINATION_PATH: ${{ inputs.destination_path }}
+      run: $GITHUB_ACTION_PATH/script.sh
+      shell: bash
